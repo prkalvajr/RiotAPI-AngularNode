@@ -1,11 +1,26 @@
 <div class="bg-gray-50 h-4/5 flex justify-center items-center w-full">
-    <div class="w-4/6">
-        <form id="searchArea" class="flex flex-col bg-gray-200 items-center">
-            <mat-form-field>
-                <input matNativeControl type="text" placeholder="Search summoner..." id="searchField">
+    <div class="w-3/6">
+        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" id="searchArea" class="flex flex-col bg-gray-200  py-6 rounded-md">
+            <mat-form-field class="w-10/12 ml-6">
+                <input matNativeControl type="summoner" placeholder="Search summoner..." formControlName="summoner">          
             </mat-form-field>
+
+            <div class="ml-6">
+                <p>
+                    Region
+                    <mat-button-toggle-group name="region" aria-label="Region" class="ml-4" formControlName="region">
+                        <mat-button-toggle value="br">BR</mat-button-toggle>
+                        <mat-button-toggle value="na">NA</mat-button-toggle>
+                        <mat-button-toggle value="eu">EUW</mat-button-toggle>  
+                        <mat-button-toggle value="eu">JP</mat-button-toggle>
+                        <mat-button-toggle value="eu">KR</mat-button-toggle>
+                        <mat-button-toggle value="eu">OCE</mat-button-toggle>
+                        <mat-button-toggle value="eu">RU</mat-button-toggle>                   
+                    </mat-button-toggle-group>
+                </p>
+            </div>
            
-            <button mat-raised-button color="primary" id="search" class="w-2/6"> 
+            <button mat-raised-button [disabled]="isSubmitting" color="primary" type="submit" id="search" class="w-4/12 ml-6"> 
                 <mat-icon aria-hidden="true" aria-label="Search" fontIcon="search"></mat-icon> 
                 Search 
             </button>
