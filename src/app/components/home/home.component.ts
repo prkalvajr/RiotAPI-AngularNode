@@ -30,6 +30,7 @@ interface ChampionDTO {
 })
 
 export class HomeComponent {
+    imageUrl: string = '';
     isSubmitting = false;
     backgroundUrl = '';
     summoner = new FormControl('', [Validators.required]);
@@ -48,15 +49,15 @@ export class HomeComponent {
       this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe((data: any) => {
         const championCount = data.data ? Object.keys(data.data).length : 0;
 
-        debugger;
         const obj = data.data;
-        console.log(obj[5]);
         this.champions = Object.values(data.data);
 
         // Generate a random number between 0 and count-1
         const randomIndex = Math.floor(Math.random() * championCount);
         // Get the random champion based on the random index
         const randomChampion = this.champions[randomIndex];
+        debugger;
+        this.imageUrl = constants.DDRAGON_SPLASH_PATH + randomChampion.name + "_0.jpg";
         console.log('Champion selecionado aleatoriamente:', randomChampion);
         console.log(data);
         console.log("count" + championCount);

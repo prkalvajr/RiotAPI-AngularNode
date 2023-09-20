@@ -1,6 +1,6 @@
-<div class="bg-gray-50 h-4/5 flex justify-center items-center w-full">
+<div class="bg-gray-50 h-full flex justify-center items-center w-full image-container" [style.backgroundImage]="'url(' + imageUrl + ')'">
     <div class="w-3/6">
-        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" id="searchArea" class="flex flex-col bg-gray-200  py-6 rounded-md">
+        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" id="searchArea" class="flex flex-col bg-gray-600 py-6 rounded-md opacity-60 hover:opacity-100">
             <mat-form-field class="w-10/12 ml-6">
                 <input required matNativeControl type="summoner" placeholder="Search summoner..." formControlName="summoner">
                 <mat-error *ngIf="summoner.invalid">{{getErrorSummoner()}}</mat-error>          
