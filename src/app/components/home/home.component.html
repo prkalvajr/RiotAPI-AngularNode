@@ -1,12 +1,15 @@
-<div class="bg-gray-50 h-full flex justify-center items-center w-full image-container" [style.backgroundImage]="'url(' + imageUrl + ')'">
-    <div class="w-3/6">
-        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" id="searchArea" class="flex flex-col bg-gray-600 py-6 rounded-md opacity-60 hover:opacity-100">
+<div class="bg-gray-50 h-full flex flex-col justify-evenly items-start w-full image-container" [style.backgroundImage]="'url(' + imageUrl + ')'">
+    <div class="ml-20 opacity-20 hover:opacity-100">
+        <button mat-flat-button class="rounded-full" (click)="changeBackground()" >Change background</button>
+    </div>
+    <div class="ml-20 mb-8 w-4/12">
+        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" id="searchArea" class="flex flex-col bg-gray-300 py-6 rounded-md">
             <mat-form-field class="w-10/12 ml-6">
                 <input required matNativeControl type="summoner" placeholder="Search summoner..." formControlName="summoner">
                 <mat-error *ngIf="summoner.invalid">{{getErrorSummoner()}}</mat-error>          
             </mat-form-field>
 
-            <div class="ml-6">
+            <div class="ml-2">
                 <p>
                     Region
                     <mat-button-toggle-group name="region" aria-label="Region" class="ml-4" formControlName="region">
@@ -14,7 +17,6 @@
                         <mat-button-toggle value="na">NA</mat-button-toggle>
                         <mat-button-toggle value="eu">EUW</mat-button-toggle>
                         <mat-button-toggle value="eu">JP</mat-button-toggle>
-                        <mat-button-toggle value="eu">KR</mat-button-toggle>
                         <mat-button-toggle value="eu">OCE</mat-button-toggle>
                         <mat-button-toggle value="eu">RU</mat-button-toggle>                   
                     </mat-button-toggle-group>

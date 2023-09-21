@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormBuilder} from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
 import { NgIf } from "@angular/common";
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -11,14 +11,11 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 import { Constants } from "src/app/config/constants";  
 import { HttpClient } from "@angular/common/http";
+import { NotifierComponent } from "../notifier/notifier.component";
 
 interface SearchMatch {
   summoner: FormControl<string>;
   region: FormControl<string>;
-}
-
-interface ChampionDTO {
-
 }
 
 @Component({
@@ -30,6 +27,9 @@ interface ChampionDTO {
 })
 
 export class HomeComponent {
+  constructor( private http: HttpClient,          
+    private readonly router: Router) { }
+
     imageUrl: string = '';
     isSubmitting = false;
     backgroundUrl = '';
@@ -42,32 +42,24 @@ export class HomeComponent {
       region: new FormControl('br', { nonNullable: true})
     })
 
-    constructor( private http: HttpClient, private readonly router: Router) { }
-
     ngOnInit(): void {
+      this.changeBackground();
+    }
+
+    changeBackground() {
       const constants = new Constants();
       this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe((data: any) => {
         const championCount = data.data ? Object.keys(data.data).length : 0;
-
-        const obj = data.data;
         this.champions = Object.values(data.data);
-
-        // Generate a random number between 0 and count-1
         const randomIndex = Math.floor(Math.random() * championCount);
-        // Get the random champion based on the random index
         const randomChampion = this.champions[randomIndex];
-        debugger;
-        this.imageUrl = constants.DDRAGON_SPLASH_PATH + randomChampion.name + "_0.jpg";
-        console.log('Champion selecionado aleatoriamente:', randomChampion);
-        console.log(data);
-        console.log("count" + championCount);
-      });  
+        this.imageUrl = constants.DDRAGON_SPLASH_PATH + randomChampion.id + "_0.jpg";
+      }); 
     }
 
     getErrorSummoner() {
       if (this.summoner.hasError('required'))
         return 'You must enter a summoner name';
-  
       return '';
     }
 
@@ -75,15 +67,13 @@ export class HomeComponent {
     { 
       const summoner = this.searchForm.get('summoner')?.value;
       const region = this.searchForm.get('region')?.value;
-
-      if (!summoner)
-        return alert("You must enter a summoner name");
-
       this.isSubmitting = true;
 
       // Match not found!
       // Go to match page.
-      // void this.router.navigate(["/match/"/*, param */])
+      //void this.router.navigate(["/match/"/*, param */])
       this.isSubmitting = false;
+      //this.notifier.showSuccessMessage("error");
+      return;
     }
 }
