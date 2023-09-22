@@ -77,9 +77,7 @@ export class HomeComponent {
       this.isSubmitting = true;
       this.isSubmitting = false;
       this.toast.showError("Match not found!");
-
-      // Go to match page.
-      //void this.router.navigate(["/match/"/*, param */])
+      void this.router.navigate(["/match/"/*, param */])
       //this.notifier.showSuccessMessage("error");
       return;
     }

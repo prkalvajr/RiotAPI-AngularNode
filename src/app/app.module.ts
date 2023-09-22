@@ -17,6 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 
 import { HeaderComponent } from './layout/header.component';
+import { NotifierService } from './services/notifier.service'
 
 @NgModule({
   declarations: [
@@ -32,12 +33,13 @@ import { HeaderComponent } from './layout/header.component';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    HeaderComponent,
     HttpClientModule,
     BrowserAnimationsModule,
+
+    HeaderComponent,
     ToastrModule.forRoot()
   ],
-  providers: [],
+  providers: [NotifierService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

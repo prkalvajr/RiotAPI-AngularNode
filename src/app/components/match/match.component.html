@@ -1,3 +1,5 @@
-<div class="bg-red-500">
-    Match Component HTML
+<div class="w-full h-full flex justify-center items-center mx-8">
+    <div class="grid grid-cols-5 gap-8 w-4/5">
+        <app-player-card *ngFor="let card of cardsData" [data]="card"></app-player-card>
+    </div>
 </div>
