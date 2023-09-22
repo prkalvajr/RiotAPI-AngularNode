@@ -17,13 +17,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 
 import { HeaderComponent } from './layout/header.component';
-import { NotifierComponent } from './components/notifier/notifier.component';
-import { LoggerComponent } from './logger/logger.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoggerComponent,
+    AppComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +33,6 @@ import { LoggerComponent } from './logger/logger.component';
     MatButtonModule,
     MatIconModule,
     HeaderComponent,
-    NotifierComponent,
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot()

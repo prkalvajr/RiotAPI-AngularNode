@@ -11,7 +11,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 import { Constants } from "src/app/config/constants";  
 import { HttpClient } from "@angular/common/http";
-import { NotifierComponent } from "../notifier/notifier.component";
+import { NotifierService } from "../../services/notifier.service";
 
 interface SearchMatch {
   summoner: FormControl<string>;
@@ -27,7 +27,8 @@ interface SearchMatch {
 })
 
 export class HomeComponent {
-  constructor( private http: HttpClient,          
+  constructor( private http: HttpClient,
+    private toast: NotifierService,          
     private readonly router: Router) { }
 
     imageUrl: string = '';
@@ -67,12 +68,18 @@ export class HomeComponent {
     { 
       const summoner = this.searchForm.get('summoner')?.value;
       const region = this.searchForm.get('region')?.value;
-      this.isSubmitting = true;
 
-      // Match not found!
+      if (!summoner) {
+        this.toast.showWarning("Type the summoner name");
+        return;
+      }
+   
+      this.isSubmitting = true;
+      this.isSubmitting = false;
+      this.toast.showError("Match not found!");
+
       // Go to match page.
       //void this.router.navigate(["/match/"/*, param */])
-      this.isSubmitting = false;
       //this.notifier.showSuccessMessage("error");
       return;
     }
