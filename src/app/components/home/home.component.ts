@@ -27,7 +27,7 @@ interface SearchMatch {
 })
 
 export class HomeComponent {
-  constructor( private http: HttpClient,
+  constructor(private http: HttpClient,
     private toast: NotifierService,          
     private readonly router: Router) { }
 

@@ -14,7 +14,7 @@ export class HeaderComponent {
   constructor(private readonly router: Router) {}
 
   goHome() {
-    void this.router.navigate(["/home"/*, param */])
+    void this.router.navigate(["/"/*, param */])
   }
     
 }

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +23,6 @@ import { NotifierService } from './services/notifier.service'
     AppComponent
   ],
   imports: [
-    CommonModule,
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
@@ -35,7 +33,6 @@ import { NotifierService } from './services/notifier.service'
     MatIconModule,
     HttpClientModule,
     BrowserAnimationsModule,
-
     HeaderComponent,
     ToastrModule.forRoot()
   ],

@@ -2,6 +2,8 @@ import { Component } from "@angular/core";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { Router } from "@angular/router";
 import { PlayerCardComponent } from "../player-card/player-card.component";
+import { ApiHttpService } from "../../services/api-http.service"
+import { Constants } from "src/app/config/constants";
 
 @Component({
     selector: "app-match-page",
@@ -12,10 +14,35 @@ import { PlayerCardComponent } from "../player-card/player-card.component";
 
 export class MatchComponent {
 
-  constructor() {}
+  constructor(private service: ApiHttpService) {
+    
+  }
+
+  ngOnInit(): void {
+    // this.getLiveGame(this.getSummonerId('prkalva'));
+  }
 
   // Get and format data from API
   // icon...
+
+  getLiveGame(encryptedSummonerId: string): void {
+    debugger;
+    const constants = new Constants(); 
+    // i must send authorization
+    this.service.get(constants.BR1SERVER +
+       '/lol/spectator/v4/active-games/by-summoner/{encryptedSummonerId}' + encryptedSummonerId);
+
+  }
+
+  getSummonerId(SummonerName: string): string {
+    debugger;
+    const constants = new Constants(); 
+    let result = this.service.get(constants.BR1SERVER +
+       "/lol/summoner/v4/summoners/by-name/" + SummonerName);
+    return "";
+  }
+
+
   cardsData = [
     { id: 1, playerName: 'player 1', champion: 'Jax'  , icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},  
     { id: 2, playerName: 'player 2', champion: 'Vex'  , icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
