@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Consume Riot API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "concurrently \"ng serve\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prkalvajr/angular-sample.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prkalvajr/angular-sample/issues"
+  },
+  "homepage": "https://github.com/prkalvajr/angular-sample#readme",
+  "dependencies": {
+    "@types/express": "^4.17.18",
+    "concurrently": "^8.2.1",
+    "express": "^4.18.2",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "tslint": "^6.1.3",
+    "typescript": "^5.2.2"
+  }
+}
