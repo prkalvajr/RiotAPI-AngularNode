@@ -19,14 +19,14 @@ export class MatchComponent {
   }
 
   ngOnInit(): void {
-    // this.getLiveGame(this.getSummonerId('prkalva'));
+    this.getLiveGame(this.getSummonerId('prkalva'));
   }
 
-  // Get and format data from API
-  // icon...
+  // SERA NECESSARIO CRIAR UM BACK END PARA BUSCAR E RETORNAR O JSON COM OS DADOS DA RIOT
+  // DEVIDO AO CORS
+  // TENTAR COM C#...
 
   getLiveGame(encryptedSummonerId: string): void {
-    debugger;
     const constants = new Constants(); 
     // i must send authorization
     this.service.get(constants.BR1SERVER +
@@ -35,13 +35,11 @@ export class MatchComponent {
   }
 
   getSummonerId(SummonerName: string): string {
-    debugger;
     const constants = new Constants(); 
-    let result = this.service.get(constants.BR1SERVER +
-       "/lol/summoner/v4/summoners/by-name/" + SummonerName);
+    const url = constants.BR1SERVER + "/lol/summoner/v4/summoners/by-name/" + SummonerName;
+    let result = this.service.get(url);
     return "";
   }
-
 
   cardsData = [
     { id: 1, playerName: 'player 1', champion: 'Jax'  , icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},  
@@ -55,6 +53,4 @@ export class MatchComponent {
     { id: 9, playerName: 'player 9', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
     { id: 10, playerName: 'player 10', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
   ];
-
-
 }
