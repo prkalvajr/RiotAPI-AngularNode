@@ -6,6 +6,12 @@ import { ApiHttpService } from "../../services/api-http.service"
 import { Constants } from "src/app/config/constants";
 import { Subscription } from 'rxjs';
 
+interface Particpant {
+  championId: string;
+  summonerName: string;
+  icon: string;
+}
+
 @Component({
     selector: "app-match-page",
     templateUrl: "./match.component.html",
@@ -15,21 +21,24 @@ import { Subscription } from 'rxjs';
 
 export class MatchComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
+  cardsData: Particpant[] = [];
 
   constructor(private service: ApiHttpService) { }
 
   ngOnInit(): void {
     const sub1 = this.service.fetchSummonerId('MOTUMBOSO').subscribe(
       (response1) => { 
-        debugger;
         console.log('response1: ' + response1.id)
         const sub2 = this.service.fetchMatchData(response1.id).subscribe(
           (response2) => {
-            debugger;
-            console.log(response2);
+            response2.participants.map((participant: { championId: string; summonerName: string }) => {
+                this.cardsData.push({ championId: participant.championId, 
+                                      summonerName: participant.summonerName,
+                                      icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'
+                                    });
+            })
           },
           (error2) => {
-            debugger;
             console.log('error getting match data:', error2)
           }
           );
@@ -48,17 +57,4 @@ export class MatchComponent implements OnInit, OnDestroy {
     // Unsubscribe from all subscriptions to prevent memory leaks
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
-
-  cardsData = [
-    { id: 1, playerName: 'player 1', champion: 'Jax'  , icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},  
-    { id: 2, playerName: 'player 2', champion: 'Vex'  , icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 3, playerName: 'player 3', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 4, playerName: 'player 4', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 5, playerName: 'player 5', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 6, playerName: 'player 6', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 7, playerName: 'player 7', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 8, playerName: 'player 8', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 9, playerName: 'player 9', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-    { id: 10, playerName: 'player 10', champion: 'Vayne', icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'},
-  ];
 }

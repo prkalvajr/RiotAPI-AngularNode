@@ -77,7 +77,13 @@ export class HomeComponent {
       this.isSubmitting = true;
       this.isSubmitting = false;
       this.toast.showError("Match not found!");
-      void this.router.navigate(["/match/"/*, param */])
+
+      const queryParams = {
+        summoner: summoner,
+        region: region,
+      };
+
+      void this.router.navigate(["/match"], { queryParams })
       //this.notifier.showSuccessMessage("error");
       return;
     }
