@@ -1,51 +1,25 @@
 // Angular Modules 
 import { Injectable } from '@angular/core'; 
-import { HttpClient, HttpHeaders } from '@angular/common/http'; 
+import { HttpClient } from '@angular/common/http'; 
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Constants } from '../config/constants';
+
 @Injectable({
     providedIn: 'root'
 }) 
 
 export class ApiHttpService { 
-    constructor( 
-    private http: HttpClient 
-    ) { }
+    constructor( private http: HttpClient ) { }
 
-    httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:4200'
-        })
-    };
-
-    public get(url: string, options?: any) 
-    { 
-        const riot = 'https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/prkalva';
-        this.http.get(url).subscribe(
-            {
-                next: (response) => {
-                    console.log(response);
-                },
-                error: (erro) => {
-                        alert("Usuário ou Senha inválido(s)!");
-                        console.log(erro)
-                },
-                complete: () => {
-                    console.log("complete");
-                }
-            }
-        )       
-        return '';
+    fetchSummonerId(summonerName: string): Observable<any> {
+        const constants = new Constants(); 
+        const url = constants.summonerUrlByName + `/${summonerName}`;
+        return this.http.get(url);
     }
 
-    public post(url: string, data: any, options?: any) { 
-        return this.http.post(url, data, options); 
+    fetchMatchData(summonerId: string): Observable<any> {
+        const constants = new Constants(); 
+        return this.http.get(constants.spectateMatchUrlBySummonerId+ `/${summonerId}`);
     }
-
-    public put(url: string, data: any, options?: any) { 
-        return this.http.put(url, data, options); 
-    }
-
-    public delete(url: string, options?: any) { 
-        return this.http.delete(url, options); 
-    } 
 }
