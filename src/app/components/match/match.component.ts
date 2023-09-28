@@ -3,6 +3,7 @@ import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { Router } from "@angular/router";
 import { PlayerCardComponent } from "../player-card/player-card.component";
 import { ApiHttpService } from "../../services/api-http.service"
+import { HttpClient } from "@angular/common/http";
 import { Constants } from "src/app/config/constants";
 import { Subscription } from 'rxjs';
 
@@ -23,33 +24,46 @@ export class MatchComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   cardsData: Particpant[] = [];
 
-  constructor(private service: ApiHttpService) { }
+  constructor(private service: ApiHttpService,
+              private http: HttpClient) { }
 
   ngOnInit(): void {
-    const sub1 = this.service.fetchSummonerId('MOTUMBOSO').subscribe(
-      (response1) => { 
-        console.log('response1: ' + response1.id)
-        const sub2 = this.service.fetchMatchData(response1.id).subscribe(
-          (response2) => {
-            response2.participants.map((participant: { championId: string; summonerName: string }) => {
-                this.cardsData.push({ championId: participant.championId, 
-                                      summonerName: participant.summonerName,
-                                      icon: 'https://yt3.googleusercontent.com/ytc/AOPolaS2atFOTPv1qqmq5LCYxAijG19KC4yPPDo-lH1X=s900-c-k-c0x00ffffff-no-rj'
-                                    });
-            })
+    const constants = new Constants();
+    const sub1 = this.service.fetchSummonerId('NTKO PHKai').subscribe(
+      (summonerInfo) => { 
+
+        const sub2 = this.service.fetchMatchData(summonerInfo.id).subscribe(
+          (matchData) => {
+
+            const sub3 = this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe(
+              (data: any) => {
+                
+                matchData.participants.map((participant: { championId: string; summonerName: string }) => {
+
+                  const champId = this.findChampionName(data.data, participant.championId);
+                  const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champId + ".png";
+
+                  this.cardsData.push({ championId: participant.championId, 
+                                        summonerName: participant.summonerName,
+                                        icon: iconurl  });
+                })
+              },
+              (error3) => {
+                console.log('error reading champions Json:', error3)
+              });
+              this.subscriptions.push(sub3);
+            
           },
           (error2) => {
             console.log('error getting match data:', error2)
           }
           );
-          // Add sub2 to the subscriptions array
           this.subscriptions.push(sub2);
         },
         (error1) => {
           console.error('Error in fetchSummonerId:', error1);
         }
       );
-    // Add sub1 to the subscriptions array
     this.subscriptions.push(sub1);
   }
 
@@ -57,4 +71,15 @@ export class MatchComponent implements OnInit, OnDestroy {
     // Unsubscribe from all subscriptions to prevent memory leaks
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
+
+  findChampionName(jsonObject: any, championId: string): string {
+    for (const key in jsonObject) {
+      if (jsonObject[key].key == championId) {
+        return jsonObject[key].id;
+      }
+    }
+
+    return '';
+  }
+
 }
