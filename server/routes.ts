@@ -9,7 +9,7 @@ app.get('/', (req, res) => res.send('Hello world'));
 app.get('/summoner/:summonerName', async (req, res) => {
     try {
         const summonerName = req.params.summonerName;
-        const riotApiToken = 'RGAPI-f4d722e2-c816-4f69-a579-98a3ff241500';
+        const riotApiToken = 'RGAPI-8ab8788a-82b7-449a-8348-6cbd6a4da3f3';
         const headers = {
             'X-Riot-Token': riotApiToken,
             'Access-Control-Allow-Origin' : '*'
@@ -35,7 +35,7 @@ app.get('/summoner/:summonerName', async (req, res) => {
 app.get('/match/:summonerId', async (req, res) => {
     try {
         const summonerId = req.params.summonerId;
-        const riotApiToken = 'RGAPI-f4d722e2-c816-4f69-a579-98a3ff241500';
+        const riotApiToken = 'RGAPI-8ab8788a-82b7-449a-8348-6cbd6a4da3f3';
         const headers = {
             'X-Riot-Token': riotApiToken,
             'Access-Control-Allow-Origin' : '*'

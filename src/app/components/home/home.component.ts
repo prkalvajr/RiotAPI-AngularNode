@@ -76,7 +76,7 @@ export class HomeComponent {
    
       this.isSubmitting = true;
       this.isSubmitting = false;
-      this.toast.showError("Match not found!");
+      //this.toast.showError("Match not found!");
 
       const queryParams = {
         summoner: summoner,

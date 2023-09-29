@@ -6,6 +6,7 @@ import { ApiHttpService } from "../../services/api-http.service"
 import { HttpClient } from "@angular/common/http";
 import { Constants } from "src/app/config/constants";
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 interface Particpant {
   championId: string;
@@ -23,48 +24,60 @@ interface Particpant {
 export class MatchComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   cardsData: Particpant[] = [];
+  summonerName: string = '';
 
   constructor(private service: ApiHttpService,
-              private http: HttpClient) { }
+              private http: HttpClient,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
     const constants = new Constants();
-    const sub1 = this.service.fetchSummonerId('NTKO PHKai').subscribe(
-      (summonerInfo) => { 
+    this.route.queryParams
+      .subscribe(params => {
+        debugger;
+        this.summonerName = params["summoner"];
 
-        const sub2 = this.service.fetchMatchData(summonerInfo.id).subscribe(
-          (matchData) => {
-
-            const sub3 = this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe(
-              (data: any) => {
+        const sub1 = this.service.fetchSummonerId(this.summonerName).subscribe(
+          (summonerInfo) => { 
+    
+            const sub2 = this.service.fetchMatchData(summonerInfo.id).subscribe(
+              (matchData) => {
+    
+                const sub3 = this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe(
+                  (data: any) => {
+                    
+                    matchData.participants.map((participant: { championId: string; summonerName: string }) => {
+    
+                      const champId = this.findChampionName(data.data, participant.championId);
+                      const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champId + ".png";
+    
+                      this.cardsData.push({ championId: participant.championId, 
+                                            summonerName: participant.summonerName,
+                                            icon: iconurl  });
+                    })
+                  },
+                  (error3) => {
+                    console.log('error reading champions Json:', error3)
+                  });
+                  this.subscriptions.push(sub3);
                 
-                matchData.participants.map((participant: { championId: string; summonerName: string }) => {
-
-                  const champId = this.findChampionName(data.data, participant.championId);
-                  const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champId + ".png";
-
-                  this.cardsData.push({ championId: participant.championId, 
-                                        summonerName: participant.summonerName,
-                                        icon: iconurl  });
-                })
               },
-              (error3) => {
-                console.log('error reading champions Json:', error3)
-              });
-              this.subscriptions.push(sub3);
-            
-          },
-          (error2) => {
-            console.log('error getting match data:', error2)
-          }
+              (error2) => {
+
+                
+                console.log('error getting match data:', error2)
+              }
+              );
+              this.subscriptions.push(sub2);
+            },
+            (error1) => {
+              console.error('Error in fetchSummonerId:', error1);
+            }
           );
-          this.subscriptions.push(sub2);
-        },
-        (error1) => {
-          console.error('Error in fetchSummonerId:', error1);
-        }
-      );
-    this.subscriptions.push(sub1);
+        this.subscriptions.push(sub1);
+      }
+    );
   }
 
   ngOnDestroy(): void {
