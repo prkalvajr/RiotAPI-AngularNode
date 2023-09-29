@@ -9,7 +9,7 @@ app.get('/', (req, res) => res.send('Hello world'));
 app.get('/summoner/:summonerName', async (req, res) => {
     try {
         const summonerName = req.params.summonerName;
-        const riotApiToken = 'RGAPI-8ab8788a-82b7-449a-8348-6cbd6a4da3f3';
+        const riotApiToken = process.env.RiotAPIToken;
         const headers = {
             'X-Riot-Token': riotApiToken,
             'Access-Control-Allow-Origin' : '*'
