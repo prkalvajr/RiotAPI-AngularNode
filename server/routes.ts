@@ -5,22 +5,30 @@ const app = express.Router();
 
 app.get('/', (req, res) => res.send('Hello world'));
 
+declare var process : {
+    env: {
+        RiotAPIToken: string
+    }
+}
 
-app.get('/summoner/:summonerName', async (req, res) => {
-    try {
+app.get('/summoner/:region/:summonerName', async (req, res) => {
+    try {    
         const summonerName = req.params.summonerName;
+        const region = req.params.region;
         const riotApiToken = process.env.RiotAPIToken;
+
         const headers = {
-            'X-Riot-Token': riotApiToken,
+            'X-Riot-Token': '',
             'Access-Control-Allow-Origin' : '*'
           };
 
-        const url = `https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`;
+        console.log("API TOken: " + riotApiToken);
+
+        const url = getRegionUrl(region) + `/summoner/v4/summoners/by-name/${summonerName}`;
 
         axios.get(url, { headers })
         .then((response) => {
         const summonerData = response.data;
-        console.log(summonerData);
         res.send(summonerData);
         })
         .catch((error) => {
@@ -32,16 +40,19 @@ app.get('/summoner/:summonerName', async (req, res) => {
 })
 
 
-app.get('/match/:summonerId', async (req, res) => {
+app.get('/match/:region/:summonerId', async (req, res) => {
     try {
+        const region = req.params.region;
         const summonerId = req.params.summonerId;
-        const riotApiToken = 'RGAPI-8ab8788a-82b7-449a-8348-6cbd6a4da3f3';
+        
+        const riotApiToken = '';
+
         const headers = {
             'X-Riot-Token': riotApiToken,
             'Access-Control-Allow-Origin' : '*'
           };
 
-        const spectateUrl = `https://br1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${summonerId}`;
+        const spectateUrl = getRegionUrl(region) + `/lol/spectator/v4/active-games/by-summoner/${summonerId}`;
 
         axios.get(spectateUrl, { headers })
         .then((response) => {
@@ -60,5 +71,16 @@ app.get('/match/:summonerId', async (req, res) => {
         console.log("[Error GET / Summoner] - " + e);
     }
 })
+
+function getRegionUrl(regionAlias: string) {
+    switch(regionAlias) {
+        default: case 'br': return 'https://br1.api.riotgames.com';
+        case 'na': return 'https://na1.api.riotgames.com';
+        case 'euw': return 'https://euw1.api.riotgames.com';
+        case 'jp': return 'https://jp1.api.riotgames.com';
+        case 'oce': return 'https://oc1.api.riotgames.com';
+        case 'ru': return 'https://ru.api.riotgames.com';
+    }
+}
 
 export { app as routes};

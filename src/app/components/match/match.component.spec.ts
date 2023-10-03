@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatchComponent } from '../match/match.component'
 import { PlayerCardComponent } from "../player-card/player-card.component";
-import { ApiHttpService } from "../../services/api-http.service";
+import { ApiHttpService } from "../../services/riot.service";
 import { HttpClient } from '@angular/common/http';
 import { Constants } from "src/app/config/constants";
 import { HttpClientTestingModule } from '@angular/common/http/testing'; 

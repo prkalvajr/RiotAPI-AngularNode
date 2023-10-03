@@ -9,17 +9,17 @@ import { Constants } from '../config/constants';
     providedIn: 'root'
 }) 
 
-export class ApiHttpService { 
+export class RiotService { 
     constructor( private http: HttpClient ) { }
 
-    fetchSummonerId(summonerName: string): Observable<any> {
+    fetchSummonerId(summonerName: string, region: string): Observable<any> {
         const constants = new Constants(); 
-        const url = constants.summonerUrlByName + `/${summonerName}`;
+        const url = constants.summonerUrlByName + `/${region}/${summonerName}`;
         return this.http.get(url);
     }
 
-    fetchMatchData(summonerId: string): Observable<any> {
+    fetchMatchData(summonerId: string, region: string): Observable<any> {
         const constants = new Constants(); 
-        return this.http.get(constants.spectateMatchUrlBySummonerId+ `/${summonerId}`);
+        return this.http.get(constants.spectateMatchUrlBySummonerId+ `/${region}/${summonerId}`);
     }
 }
