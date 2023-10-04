@@ -9,6 +9,7 @@ export class Constants {
     public readonly DDRAGON_CHAMPIONSJSON = 'http://ddragon.leagueoflegends.com/cdn/13.19.1/data/en_US/champion.json'; 
     public readonly DDRAGON_SUMMONERJSON = 'http://ddragon.leagueoflegends.com/cdn/13.19.1/data/en_US/summoner.json';
 
-    public readonly summonerUrlByName = 'http://localhost:4201/summoner'; // + {name}
-    public readonly spectateMatchUrlBySummonerId = 'http://localhost:4201/match'; // + summonerId
+    public readonly summonerUrlByName = 'http://localhost:4201/summoner';
+    public readonly spectateMatchUrlBySummonerId = 'http://localhost:4201/match';
+    public readonly rankUrlBySummonerId = 'http://localhost:4201/rank';
 } 

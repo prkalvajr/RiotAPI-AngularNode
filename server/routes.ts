@@ -15,10 +15,10 @@ app.get('/summoner/:region/:summonerName', async (req, res) => {
     try {    
         const summonerName = req.params.summonerName;
         const region = req.params.region;
-        const riotApiToken = process.env.RiotAPIToken;
+        const riotApiToken = 'RGAPI-be0958bc-38c0-40cc-abe1-3e1d70bbe56b';
         
         const headers = {
-            'X-Riot-Token': '',
+            'X-Riot-Token': riotApiToken,
             'Access-Control-Allow-Origin' : '*'
           };
 
@@ -44,9 +44,8 @@ app.get('/summoner/:region/:summonerName', async (req, res) => {
 app.get('/match/:region/:summonerId', async (req, res) => {
     try {
         const region = req.params.region;
-        const summonerId = req.params.summonerId;
-        
-        const riotApiToken = '';
+        const summonerId = req.params.summonerId;   
+        const riotApiToken = 'RGAPI-be0958bc-38c0-40cc-abe1-3e1d70bbe56b';
 
         const headers = {
             'X-Riot-Token': riotApiToken,
@@ -59,7 +58,6 @@ app.get('/match/:region/:summonerId', async (req, res) => {
         .then((response) => {
 
         const matchData = response.data;
-        console.log(matchData);
         res.send(matchData);
 
         })
@@ -69,7 +67,37 @@ app.get('/match/:region/:summonerId', async (req, res) => {
         });
 
     } catch (e) {
-        console.log("[Error GET / Summoner] - " + e);
+        console.log("[Error GET / Match] - " + e);
+    }
+})
+
+app.get('/rank/:region/:summonerId', async (req, res) => {
+    try {
+        const region = req.params.region;
+        const summonerId = req.params.summonerId;   
+        const riotApiToken = 'RGAPI-be0958bc-38c0-40cc-abe1-3e1d70bbe56b';
+
+        const headers = {
+            'X-Riot-Token': riotApiToken,
+            'Access-Control-Allow-Origin' : '*'
+          };
+
+        const rankUrl = getRegionUrl(region) + `/lol/league/v4/entries/by-summoner/${summonerId}`;
+
+        axios.get(rankUrl, { headers })
+        .then((response) => {
+
+        const matchData = response.data;
+        res.send(matchData);
+
+        })
+        .catch((error) => {
+            res.send("error 404");
+            console.error('Erro na requisição:', error);
+        });
+    }
+    catch (e) {
+        console.log("[Error GET / Rank] - " + e);
     }
 })
 

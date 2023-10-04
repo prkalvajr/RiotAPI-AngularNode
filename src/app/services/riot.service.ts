@@ -22,4 +22,9 @@ export class RiotService {
         const constants = new Constants(); 
         return this.http.get(constants.spectateMatchUrlBySummonerId+ `/${region}/${summonerId}`);
     }
+
+    fetchRankData(summonerId: string, region: string): Observable<any> {
+        const constants = new Constants(); 
+        return this.http.get(constants.rankUrlBySummonerId + `/${region}/${summonerId}`);
+    }
 }

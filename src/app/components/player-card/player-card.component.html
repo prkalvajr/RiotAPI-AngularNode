@@ -21,14 +21,16 @@
 
             </div>
         </div>
-        <div class="flex flex-row space-x-2"> <!-- Summoner Spells-->
+        <div class="flex flex-row space-x-2">
             <div class=""><img matCardImageSmall src={{data.spell1Id}} /></div>
             <div class=""><img matCardImageSmall src={{data.spell2Id}} /></div>
         </div>
-        <div> <!-- Current elo and points -->
-
+        <div>
+            {{data.tier}}
+            {{data.rank}}
+            <label> LP: {{data.leaguePoints}}</label>
         </div>
-        <div>  <!-- Role -->
+        <div>
 
         </div>
     </mat-card-content>          
