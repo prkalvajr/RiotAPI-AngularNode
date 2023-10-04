@@ -13,6 +13,8 @@ interface Particpant {
   championName: string;
   summonerName: string;
   icon: string;
+  spell1Id: string;
+  spell2Id: string;
 }
 
 @Component({
@@ -45,18 +47,33 @@ export class MatchComponent implements OnInit, OnDestroy {
               (matchData) => {
     
                 const sub3 = this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe(
-                  (data: any) => {
-                    
-                    matchData.participants.map((participant: { championId: string; summonerName: string }) => {
-    
-                      const champName = this.findChampionName(data.data, participant.championId);
-                      const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champName + ".png";
-    
-                      this.cardsData.push({ championId: participant.championId, 
-                                            championName: champName,
-                                            summonerName: participant.summonerName,
-                                            icon: iconurl  });
-                    })
+                  (championJson: any) => {
+
+                    const sub4 = this.http.get(constants.DDRAGON_SUMMONERJSON).subscribe(
+                      (summonerJson: any) => {
+
+                        matchData.participants.map((participant: { championId: string; summonerName: string;
+                          spell1Id: string; spell2Id: string; }) => {
+      
+                          const champName = this.findChampionName(championJson.data, participant.championId);
+                          const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champName + ".png";
+                          const spell1Name = this.findChampionName(summonerJson.data, participant.spell1Id);
+                          const spell1Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell1Name + ".png";
+                          const spell2Name = this.findChampionName(summonerJson.data, participant.spell2Id);
+                          const spell2Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell2Name + ".png";
+      
+                          this.cardsData.push({ championId: participant.championId, 
+                                              championName: champName,
+                                              summonerName: participant.summonerName,
+                                              icon: iconurl,
+                                              spell1Id: spell1Url,
+                                              spell2Id: spell2Url  });
+                          });
+                      },
+                      (error4) => {
+                        console.log("error reading summoner spells Json")
+                      });
+                      this.subscriptions.push(sub4);
                   },
                   (error3) => {
                     console.log('error reading champions Json:', error3)

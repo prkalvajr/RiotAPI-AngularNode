@@ -16,15 +16,16 @@ app.get('/summoner/:region/:summonerName', async (req, res) => {
         const summonerName = req.params.summonerName;
         const region = req.params.region;
         const riotApiToken = process.env.RiotAPIToken;
-
+        
         const headers = {
             'X-Riot-Token': '',
             'Access-Control-Allow-Origin' : '*'
           };
 
-        console.log("API TOken: " + riotApiToken);
+        const url = getRegionUrl(region) + `/lol/summoner/v4/summoners/by-name/${summonerName}`;
 
-        const url = getRegionUrl(region) + `/summoner/v4/summoners/by-name/${summonerName}`;
+        console.log("API TOken: " + riotApiToken);
+        console.log("URL: " + url);
 
         axios.get(url, { headers })
         .then((response) => {
@@ -35,7 +36,7 @@ app.get('/summoner/:region/:summonerName', async (req, res) => {
         console.error('Erro na requisição:', error);
         });
     } catch (e) {
-        console.log("[Error GET / Summoner] - " + e);
+        console.log("[Error GET / Summoner] - " + e.response);
     }
 })
 
@@ -76,7 +77,7 @@ function getRegionUrl(regionAlias: string) {
     switch(regionAlias) {
         default: case 'br': return 'https://br1.api.riotgames.com';
         case 'na': return 'https://na1.api.riotgames.com';
-        case 'euw': return 'https://euw1.api.riotgames.com';
+        case 'eu': return 'https://euw1.api.riotgames.com';
         case 'jp': return 'https://jp1.api.riotgames.com';
         case 'oce': return 'https://oc1.api.riotgames.com';
         case 'ru': return 'https://ru.api.riotgames.com';

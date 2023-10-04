@@ -1,5 +1,36 @@
 <mat-card class="flex items-center">
-    <mat-card-title> {{data.summonerName}} </mat-card-title>
-    <img matCardImageSmall src={{data.icon}} />
-    <mat-card-content> {{data.championName}} </mat-card-content>
+    
+    <mat-card-title>
+        <div class="text-sm">
+            {{data.summonerName}} 
+        </div>
+    </mat-card-title>
+
+
+
+    <mat-card-content> 
+        <div>
+            <div>
+                <img matCardImageSmall src={{data.icon}} />
+    
+                <p>
+                    {{data.championName}} 
+                </p>
+            </div>
+            <div> <!-- Win rate -->
+
+            </div>
+        </div>
+        <div class="flex flex-row space-x-2"> <!-- Summoner Spells-->
+            <div class=""><img matCardImageSmall src={{data.spell1Id}} /></div>
+            <div class=""><img matCardImageSmall src={{data.spell2Id}} /></div>
+        </div>
+        <div> <!-- Current elo and points -->
+
+        </div>
+        <div>  <!-- Role -->
+
+        </div>
+    </mat-card-content>          
+
 </mat-card>
