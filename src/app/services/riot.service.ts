@@ -27,4 +27,23 @@ export class RiotService {
         const constants = new Constants(); 
         return this.http.get(constants.rankUrlBySummonerId + `/${region}/${summonerId}`);
     }
+
+    getDataDragonChampion() {
+        const constants = new Constants(); 
+        this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe({
+            next(jsonObject) {
+                debugger;
+                return jsonObject;
+            }
+        });
+    }
+
+    getDataDragonSpell() {
+        const constants = new Constants(); 
+        this.http.get(constants.DDRAGON_SUMMONERJSON).subscribe({
+            next(jsonObject) {
+                return jsonObject;
+            }
+        });
+    }
 }

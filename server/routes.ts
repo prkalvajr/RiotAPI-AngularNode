@@ -15,7 +15,7 @@ app.get('/summoner/:region/:summonerName', async (req, res) => {
     try {    
         const summonerName = req.params.summonerName;
         const region = req.params.region;
-        const riotApiToken = 'RGAPI-62c6a50c-69b3-47f7-9972-eb4062f47ce8';
+        const riotApiToken = 'RGAPI-8a371618-2a02-4c7a-b72e-275d49e89ab4';
         
         const headers = {
             'X-Riot-Token': riotApiToken,
@@ -45,7 +45,7 @@ app.get('/match/:region/:summonerId', async (req, res) => {
     try {
         const region = req.params.region;
         const summonerId = req.params.summonerId;   
-        const riotApiToken = 'RGAPI-62c6a50c-69b3-47f7-9972-eb4062f47ce8';
+        const riotApiToken = 'RGAPI-8a371618-2a02-4c7a-b72e-275d49e89ab4';
 
         const headers = {
             'X-Riot-Token': riotApiToken,
@@ -75,7 +75,7 @@ app.get('/rank/:region/:summonerId', async (req, res) => {
     try {
         const region = req.params.region;
         const summonerId = req.params.summonerId;   
-        const riotApiToken = 'RGAPI-62c6a50c-69b3-47f7-9972-eb4062f47ce8';
+        const riotApiToken = 'RGAPI-8a371618-2a02-4c7a-b72e-275d49e89ab4';
 
         const headers = {
             'X-Riot-Token': riotApiToken,

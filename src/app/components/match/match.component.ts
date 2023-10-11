@@ -3,11 +3,9 @@ import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { Router } from "@angular/router";
 import { PlayerCardComponent } from "../player-card/player-card.component";
 import { RiotService } from "../../services/riot.service"
-import { HttpClient } from "@angular/common/http";
 import { Constants } from "src/app/config/constants";
-import { Subscription, mergeMap, filter, catchError, switchMap, map, merge, mergeAll, concatMap, tap, mergeWith } from 'rxjs';
+import { Subscription, mergeMap, filter, catchError, switchMap, map, merge, mergeAll, concatMap, tap, mergeWith, forkJoin, zip, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-
 
 interface Card {
   championId: string;
@@ -32,36 +30,53 @@ interface Card {
 export class MatchComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   cardsData: Card[] = [];
+  summonerData: any;
   summonerName: string = '';
   region: string = '';
 
   constructor(private service: RiotService,
-              private http: HttpClient,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     const constants = new Constants();
     this.route.queryParams.subscribe(params => { 
-
       this.summonerName = params["summoner"];
       this.region = params["region"];
-
 
       const sub = this.service.fetchSummonerId(this.summonerName, this.region)
       .pipe(
         switchMap(result => this.service.fetchMatchData(result.id, this.region)),
         map(response => response.participants),
+        switchMap((participants: any) => {
+          console.log(participants);
+          return participants.map((i: any) => {
+             return zip(of(i), this.service.fetchRankData(i.summonerId, this.region));
+          });
+        })
       )
-      .subscribe((data) => {
+ 
+
+
+        //zip(this.service.fetchRankData)
+        //zip(participants => { 
+        //  return zip(participants.map((i: { summonerId: string; }) => 
+        //  this.service.fetchRankData(i.summonerId, this.region))
+        //)})        
         
-        const rankObserver = {
+        //TESTAR
+      
+
+      .subscribe((data: any) => {
+
+        const observer = {
           next: (rank: any) => {
+            debugger;
               const rIndex = rank.findIndex((x: any) => x.queueType == "RANKED_SOLO_5x5")
               const index = this.cardsData.findIndex((x) => x.summonerId == rank[rIndex].summonerId)
 
               let tierHasNoRank = false;
               if (rank[0].tier == 'MASTER' || rank[0].tier == 'GRANDMASTER' || rank[0].tier == 'CHALLENGER')
-                  tierHasNoRank = true;
+              tierHasNoRank = true;
               
               this.cardsData[index].tier = rank[rIndex].tier;
               this.cardsData[index].rank = tierHasNoRank ? '' : rank[rIndex].rank;
@@ -69,10 +84,12 @@ export class MatchComponent implements OnInit, OnDestroy {
           }
         }
 
-        data.map((participant: { summonerId: string; championId: string; summonerName: string;
-          spell1Id: string; spell2Id: string; }) => {
+        data.subscribe(observer);
 
+        //data.map((participant: { summonerId: string; championId: string; summonerName: string;
+          //spell1Id: string; spell2Id: string; }) => {
 
+          const championJson = this.service.getDataDragonChampion();
           //const champName = this.findKeyInJson(championJson.data, participant.championId);
           //const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champName + ".png";
           //const spell1Name = this.findKeyInJson(summonerJson.data, participant.spell1Id);
@@ -80,6 +97,7 @@ export class MatchComponent implements OnInit, OnDestroy {
           //const spell2Name = this.findKeyInJson(summonerJson.data, participant.spell2Id);
           //const spell2Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell2Name + ".png";
 
+          /*
           this.cardsData.push({ championId: participant.championId, 
             championName: 'a',//champName,
             summonerName: participant.summonerName,
@@ -94,6 +112,7 @@ export class MatchComponent implements OnInit, OnDestroy {
 
           this.service.fetchRankData(participant.summonerId, this.region).subscribe(rankObserver);
         });
+        */
       }); 
       
       this.subscriptions.push(sub);
