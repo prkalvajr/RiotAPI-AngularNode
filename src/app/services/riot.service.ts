@@ -30,20 +30,11 @@ export class RiotService {
 
     getDataDragonChampion() {
         const constants = new Constants(); 
-        this.http.get(constants.DDRAGON_CHAMPIONSJSON).subscribe({
-            next(jsonObject) {
-                debugger;
-                return jsonObject;
-            }
-        });
+        return this.http.get(constants.DDRAGON_CHAMPIONSJSON);
     }
 
     getDataDragonSpell() {
         const constants = new Constants(); 
-        this.http.get(constants.DDRAGON_SUMMONERJSON).subscribe({
-            next(jsonObject) {
-                return jsonObject;
-            }
-        });
+        return this.http.get(constants.DDRAGON_SUMMONERJSON);
     }
 }

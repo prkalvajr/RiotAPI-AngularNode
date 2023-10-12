@@ -30,25 +30,39 @@ interface Card {
 export class MatchComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   cardsData: Card[] = [];
-  summonerData: any;
   summonerName: string = '';
   region: string = '';
+
+  champion: any;
+  spells: any;
+
 
   constructor(private service: RiotService,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    const constants = new Constants();
-    this.route.queryParams.subscribe(params => { 
-      this.summonerName = params["summoner"];
-      this.region = params["region"];
-
-      const sub = this.service.fetchSummonerId(this.summonerName, this.region)
-      .pipe(
+    const sub = this.route.queryParams.pipe(
+        switchMap(qs => {
+          this.summonerName = qs["summoner"];
+          this.region = qs["region"];
+          return this.service.fetchSummonerId(this.summonerName, this.region)
+        }),
+        tap(data => {   // can i do it without subscribe?
+          this.service.getDataDragonChampion().subscribe({
+            next: (data) => {
+              this.champion = data;
+            }
+          })
+          this.service.getDataDragonSpell().subscribe({
+            next: (data) => {
+              this.spells = data;
+            }
+          })
+          return data;
+        }),
         switchMap(result => this.service.fetchMatchData(result.id, this.region)),
         map(response => response.participants),
         switchMap((participants: any) => {
-          console.log(participants);
           return participants.map((i: any) => {
              return zip(of(i), this.service.fetchRankData(i.summonerId, this.region));
           });
@@ -58,9 +72,10 @@ export class MatchComponent implements OnInit, OnDestroy {
         const observer = {
           next: (data: any) => {
             debugger;
+            console.log(this.champion);
+            console.log(this.spells);
 
             const rIndex = data[1].findIndex((x: any) => x.queueType == "RANKED_SOLO_5x5")
-
             let tierHasNoRank = false;
             if (data[1][rIndex].tier == 'MASTER' || data[1][rIndex].tier == 'GRANDMASTER' || data[1][rIndex].tier == 'CHALLENGER')
             tierHasNoRank = true;
@@ -80,23 +95,23 @@ export class MatchComponent implements OnInit, OnDestroy {
         }
 
         data.subscribe(observer);
+       // const datadragon = this.service.getDataDragonChampion().pipe(
+       //   map((data) => zip(data, this.service.getDataDragonSpell() )),
+       //   zip(data, this.service.getDataDragonSpell())
+       // )
 
-          //const championJson = this.service.getDataDragonChampion();
-
-          //const champName = this.findKeyInJson(championJson.data, participant.championId);
-          //const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champName + ".png";
-          //const spell1Name = this.findKeyInJson(summonerJson.data, participant.spell1Id);
-          //const spell1Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell1Name + ".png";
-          //const spell2Name = this.findKeyInJson(summonerJson.data, participant.spell2Id);
-          //const spell2Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell2Name + ".png";
+        //const champName = this.findKeyInJson(championJson.data, participant.championId);
+        //const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champName + ".png";
+        //const spell1Name = this.findKeyInJson(summonerJson.data, participant.spell1Id);
+        //const spell1Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell1Name + ".png";
+        //const spell2Name = this.findKeyInJson(summonerJson.data, participant.spell2Id);
+        //const spell2Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell2Name + ".png";
       }); 
       
       this.subscriptions.push(sub);
-    })  
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions to prevent memory leaks
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
