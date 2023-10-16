@@ -41,6 +41,7 @@ export class MatchComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    const constants = new Constants(); 
     const sub = this.route.queryParams.pipe(
         switchMap(qs => {
           this.summonerName = qs["summoner"];
@@ -80,13 +81,20 @@ export class MatchComponent implements OnInit, OnDestroy {
             if (data[1][rIndex].tier == 'MASTER' || data[1][rIndex].tier == 'GRANDMASTER' || data[1][rIndex].tier == 'CHALLENGER')
             tierHasNoRank = true;
 
+            const champName = this.findKeyInJson(this.champion.data, data[0].championId);
+            const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champName + ".png";
+            const spell1Name = this.findKeyInJson(this.spells.data, data[0].spell1Id);
+            const spell1Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell1Name + ".png";
+            const spell2Name = this.findKeyInJson(this.spells.data, data[0].spell2Id);
+            const spell2Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell2Name + ".png";
+
             this.cardsData.push({ championId: data[0].championId, 
-              championName: 'a',//champName,
+              championName: champName,
               summonerName: data[0].summonerName,
               summonerId: data[0].summonerId,
-              icon: '', //iconurl,
-              spell1Id: '', //spell1Url,
-              spell2Id: '', //spell2Url,
+              icon: iconurl,
+              spell1Id: spell1Url, 
+              spell2Id: spell2Url,
               tier: data[1][rIndex].tier,
               rank: tierHasNoRank ? '' : data[1][rIndex].rank,
               leaguePoints: data[1][rIndex].leaguePoints 
@@ -95,17 +103,6 @@ export class MatchComponent implements OnInit, OnDestroy {
         }
 
         data.subscribe(observer);
-       // const datadragon = this.service.getDataDragonChampion().pipe(
-       //   map((data) => zip(data, this.service.getDataDragonSpell() )),
-       //   zip(data, this.service.getDataDragonSpell())
-       // )
-
-        //const champName = this.findKeyInJson(championJson.data, participant.championId);
-        //const iconurl = constants.DDRAGON_CHAMPION_ICON_ROUTE + champName + ".png";
-        //const spell1Name = this.findKeyInJson(summonerJson.data, participant.spell1Id);
-        //const spell1Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell1Name + ".png";
-        //const spell2Name = this.findKeyInJson(summonerJson.data, participant.spell2Id);
-        //const spell2Url = constants.DDRAGON_CHAMPION_SUMMONERSPELL_ROUTE + spell2Name + ".png";
       }); 
       
       this.subscriptions.push(sub);
