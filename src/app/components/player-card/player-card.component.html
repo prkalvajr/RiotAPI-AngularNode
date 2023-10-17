@@ -10,9 +10,8 @@
 
     <mat-card-content> 
         <div>
-            <div>
-                <img matCardImageSmall src={{data.icon}} />
-    
+            <div class="flex flex-col items-center">
+                <img src={{data.icon}} class="w-16 h-16 " />
                 <p>
                     {{data.championName}} 
                 </p>
@@ -21,13 +20,14 @@
 
             </div>
         </div>
-        <div class="flex flex-row space-x-2">
-            <div class=""><img matCardImageSmall src={{data.spell1Id}} /></div>
-            <div class=""><img matCardImageSmall src={{data.spell2Id}} /></div>
+        <div class="flex flex-row space-x-4 items-center justify-center">
+            <div class="w-10 h-10"><img src={{data.spell1Id}} /></div>
+            <div class="w-10 h-10"><img src={{data.spell2Id}} /></div>
         </div>
         <div>
             {{data.tier}}
             {{data.rank}}
+            <br/>
             <label> LP: {{data.leaguePoints}}</label>
         </div>
         <div>
