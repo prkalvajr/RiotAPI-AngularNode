@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { NgForOf } from "@angular/common";
 import { Router } from "@angular/router";
 import { PlayerCardComponent } from "../player-card/player-card.component";
 import { RiotService } from "../../services/riot.service"
 import { Constants } from "src/app/config/constants";
-import { Subscription, mergeMap, filter, catchError, switchMap, map, merge, mergeAll, concatMap, tap, mergeWith, forkJoin, zip, of } from 'rxjs';
+import { Subscription, catchError, switchMap, map, tap, zip, of, delay } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { NotifierService } from "../../services/notifier.service";
 
 interface Card {
   championId: string;
@@ -32,13 +33,13 @@ export class MatchComponent implements OnInit, OnDestroy {
   cardsData: Card[] = [];
   summonerName: string = '';
   region: string = '';
-
   champion: any;
   spells: any;
 
-
   constructor(private service: RiotService,
-              private route: ActivatedRoute) { }
+              private notifier: NotifierService,
+              private route: ActivatedRoute,
+              private readonly router: Router) { }
 
   ngOnInit(): void {
     const constants = new Constants(); 
@@ -69,13 +70,11 @@ export class MatchComponent implements OnInit, OnDestroy {
           });
         })
       )
-      .subscribe((data: any) => {
+      .subscribe({
+        next:(data: any) => {
+
         const observer = {
           next: (data: any) => {
-            debugger;
-            console.log(this.champion);
-            console.log(this.spells);
-
             const rIndex = data[1].findIndex((x: any) => x.queueType == "RANKED_SOLO_5x5")
             let tierHasNoRank = false;
             if (data[1][rIndex].tier == 'MASTER' || data[1][rIndex].tier == 'GRANDMASTER' || data[1][rIndex].tier == 'CHALLENGER')
@@ -99,11 +98,17 @@ export class MatchComponent implements OnInit, OnDestroy {
               rank: tierHasNoRank ? '' : data[1][rIndex].rank,
               leaguePoints: data[1][rIndex].leaguePoints 
             });
-          }
+          },
         }
 
         data.subscribe(observer);
-      }); 
+      },
+      error: (err) => {
+        console.log("Error showing match: " + err);
+        this.notifier.showError("Error finding match, redirecting to home.");
+        setTimeout(() => { this.router.navigate(['/']); }, 3000);    
+      }
+    });
       
       this.subscriptions.push(sub);
   }
