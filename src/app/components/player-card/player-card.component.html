@@ -20,15 +20,22 @@
 
             </div>
         </div>
+        <hr class="pb-1 pt-1"/>
         <div class="flex flex-row space-x-4 items-center justify-center">
             <div class="w-10 h-10"><img src={{data.spell1Id}} /></div>
             <div class="w-10 h-10"><img src={{data.spell2Id}} /></div>
         </div>
+        <hr class="mt-2"/>
         <div>
-            {{data.tier}}
-            {{data.rank}}
-            <br/>
-            <label> LP: {{data.leaguePoints}}</label>
+            <div class="w-20 h-20">
+                <img src="../../../assets/img/Rank={{data.tier}}.png" />
+            </div>
+            <div>
+                {{data.tier}}
+                {{data.rank}}   
+                <br/>
+                <label> LP: {{data.leaguePoints}}</label>
+            </div>
         </div>
         <div>
 
